@@ -53,8 +53,8 @@
 }
 
 .error {
-  color: #dc2626; /* red */
-  background-color: #fee2e2; /* light red background */
+  color: #dc2626;
+  background-color: #fee2e2;
   padding: 0.5rem 1rem;
   border-radius: 6px;
   margin-bottom: 1rem;

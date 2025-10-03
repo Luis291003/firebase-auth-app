@@ -6,6 +6,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { useRouter } from "next/navigation";
 import styles from './login.module.css';
 
+// State
 export default function LoginPage() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -14,7 +15,9 @@ export default function LoginPage() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Auth handler (register/login)
   const handleAuth = async () => {
+  // Input validation
   if (!email || !password) {
     setErrorMessage("Email and password are required.");
     return;
@@ -26,18 +29,21 @@ export default function LoginPage() {
   }
 
   try {
-    setErrorMessage(""); // clear previous error
+    setErrorMessage("");
     if (isNewUser) {
+      // Registration
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       if (fullName) {
         await updateProfile(userCred.user, { displayName: fullName });
       }
     } else {
+      // Login
       await signInWithEmailAndPassword(auth, email, password);
     }
 
-    router.push("/");
+    router.push("/"); // Navigate to home
   } catch (err: any) {
+    // Firebase error handling
     switch (err.code) {
       case "auth/invalid-credential":
         setErrorMessage("Wrong credentials. Please try again.");
@@ -58,6 +64,7 @@ export default function LoginPage() {
   }
 };
 
+  // JSX
   return (
     <div className={styles.container}>
   <h2 className={styles.heading}>{isNewUser ? "Register" : "Login"}</h2>
