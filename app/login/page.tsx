@@ -12,20 +12,51 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isNewUser, setIsNewUser] = useState(true);
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleAuth = async () => {
-    try {
-      if (isNewUser) {
-        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+  if (!email || !password) {
+    setErrorMessage("Email and password are required.");
+    return;
+  }
+
+  if (isNewUser && password.length < 6) {
+    setErrorMessage("Password must be at least 6 characters.");
+    return;
+  }
+
+  try {
+    setErrorMessage(""); // clear previous error
+    if (isNewUser) {
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      if (fullName) {
         await updateProfile(userCred.user, { displayName: fullName });
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
       }
-      router.push("/");
-    } catch (err: any) {
-      alert(err.message);
+    } else {
+      await signInWithEmailAndPassword(auth, email, password);
     }
-  };
+
+    router.push("/");
+  } catch (err: any) {
+    switch (err.code) {
+      case "auth/invalid-credential":
+        setErrorMessage("Wrong credentials. Please try again.");
+        break;
+      case "auth/email-already-in-use":
+        setErrorMessage("This email is already registered. Try logging in.");
+        break;
+      case "auth/invalid-email":
+        setErrorMessage("Invalid email format.");
+        break;
+      case "auth/weak-password":
+        setErrorMessage("Password is too weak. Minimum 6 characters.");
+        break;
+      default:
+        setErrorMessage(err.message);
+        break;
+    }
+  }
+};
 
   return (
     <div className={styles.container}>
@@ -58,6 +89,7 @@ export default function LoginPage() {
   />
 
   <button className={styles.button} onClick={handleAuth}>
+    {errorMessage && <p className={styles.error}>{errorMessage}</p>}
     {isNewUser ? "Register" : "Login"}
   </button>
 

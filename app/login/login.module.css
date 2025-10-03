@@ -51,3 +51,13 @@
   text-align: center;
   color: #4f46e5;
 }
+
+.error {
+  color: #dc2626; /* red */
+  background-color: #fee2e2; /* light red background */
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
