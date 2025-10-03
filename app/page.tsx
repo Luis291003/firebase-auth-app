@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { auth } from "../firebase/config";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import styles from './page.module.css';
 
 export default function HomePage() {
   const [user, setUser] = useState<any>(null);
@@ -25,9 +26,13 @@ export default function HomePage() {
   if (!user) return <p>Loading...</p>;
 
   return (
-    <div style={{ textAlign: "center", marginTop: "2rem" }}>
-      <h1>Hey, {user.displayName || "User"}! You’re successfully logged in.</h1>
-      <button onClick={handleLogout}>Logout</button>
+    <div className={styles.container}>
+      <h1 className={styles.heading}>
+        Hey, {user.displayName || "User"}! You’re successfully logged in.
+      </h1>
+      <button className={styles.button} onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 }
